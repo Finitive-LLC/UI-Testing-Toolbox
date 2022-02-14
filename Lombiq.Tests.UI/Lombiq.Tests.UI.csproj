@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
+    <IsPublishable>false</IsPublishable>
     <DefaultItemExcludes>$(DefaultItemExcludes);.git*</DefaultItemExcludes>
     <!-- With these the driver exe files will be copied to all projects referencing this project. Otherwise all child
     projects would need to add the packages too. -->
@@ -77,6 +78,16 @@
     <ProjectReference Include="..\..\..\src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.RestEase\Lombiq.HelpfulLibraries.RestEase.csproj" />
     <ProjectReference Include="..\..\..\src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.csproj" />
     <ProjectReference Include="..\Lombiq.Tests.UI.Shortcuts\Lombiq.Tests.UI.Shortcuts.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\src\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+  <Import Project="..\..\..\src\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+
+  <ItemGroup>
+    <EmbeddedResource Include="node_modules\gremlins.js\dist\gremlins.min.js">
+      <Link>Resources\gremlins.min.js</Link>
+    </EmbeddedResource>
+    <None Remove="node_modules\**" />
   </ItemGroup>
 
 </Project>
