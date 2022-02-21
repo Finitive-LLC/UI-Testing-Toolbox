@@ -7,7 +7,7 @@ namespace Lombiq.Tests.UI.Extensions
 {
     public static class OrchardCoreDashboardUITestContextExtensions
     {
-        public static void FillContentItemTitle(this UITestContext context, string title) =>
+        public static Task FillContentItemTitleAsync(this UITestContext context, string title) =>
             context.ClickAndFillInWithRetriesAsync(By.Id("TitlePart_Title"), title);
 
         public static Task GoToEditorTabAsync(this UITestContext context, string tabText) =>
