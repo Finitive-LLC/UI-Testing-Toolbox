@@ -123,6 +123,10 @@ namespace Lombiq.Tests.UI.Services
                     Driver.SwitchTo().Window(Driver.WindowHandles.Last());
                 }
             }
+            else
+            {
+                _historicBrowserLog.AddRange(await Driver.GetAndEmptyBrowserLogAsync());
+            }
 
             return _historicBrowserLog;
         }
