@@ -4,6 +4,7 @@ using Lombiq.Tests.UI.Helpers;
 using Lombiq.Tests.UI.Models;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
@@ -11,6 +12,8 @@ namespace Lombiq.Tests.UI.Services
 {
     public static class UITestExecutor
     {
+        private static readonly SemaphoreSlim _semaphoreSlim = new(4);
+
         /// <summary>
         /// Executes a test on a new Orchard Core web app instance within a newly created Atata scope.
         /// </summary>
@@ -57,6 +60,14 @@ namespace Lombiq.Tests.UI.Services
             {
                 try
                 {
+                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
+                        $"Before await CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
+
+                    await _semaphoreSlim.WaitAsync();
+
+                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
+                        $"After await CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
+
                     await using var instance = new UITestExecutionSession(testManifest, configuration);
                     passed = await instance.ExecuteAsync(retryCount, dumpRootPath);
                 }
@@ -71,6 +82,14 @@ namespace Lombiq.Tests.UI.Services
                     {
                         TeamCityMetadataReporter.ReportInt(testManifest.Name, "TryCount", retryCount + 1);
                     }
+
+                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
+                        $"Before release CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
+
+                    _semaphoreSlim.Release();
+
+                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
+                        $"After release CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
                 }
 
                 retryCount++;
