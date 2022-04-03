@@ -60,13 +60,7 @@ namespace Lombiq.Tests.UI.Services
             {
                 try
                 {
-                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
-                        $"Before await CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
-
                     await _semaphoreSlim.WaitAsync();
-
-                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
-                        $"After await CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
 
                     await using var instance = new UITestExecutionSession(testManifest, configuration);
                     passed = await instance.ExecuteAsync(retryCount, dumpRootPath);
@@ -83,13 +77,7 @@ namespace Lombiq.Tests.UI.Services
                         TeamCityMetadataReporter.ReportInt(testManifest.Name, "TryCount", retryCount + 1);
                     }
 
-                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
-                        $"Before release CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
-
                     _semaphoreSlim.Release();
-
-                    configuration.TestOutputHelper.WriteLineTimestampedAndDebug(
-                        $"After release CurrentCount: {_semaphoreSlim.CurrentCount}| AvailableWaitHandle: {_semaphoreSlim.AvailableWaitHandle}");
                 }
 
                 retryCount++;
