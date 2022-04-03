@@ -12,7 +12,7 @@ namespace Lombiq.Tests.UI.Services
 {
     public static class UITestExecutor
     {
-        private static readonly SemaphoreSlim _semaphoreSlim = new(8);
+        private static readonly SemaphoreSlim _semaphoreSlim = new(10);
 
         /// <summary>
         /// Executes a test on a new Orchard Core web app instance within a newly created Atata scope.
