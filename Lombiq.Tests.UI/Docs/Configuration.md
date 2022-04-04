@@ -41,7 +41,8 @@ Here's a full *TestConfiguration.json* file example, something appropriate durin
     },
     "OrchardCoreUITestExecutorConfiguration": {
       "MaxRetryCount": 0,
-      "RetryIntervalSeconds": 0
+      "RetryIntervalSeconds": 0,
+      "MaxRunningConcurrentTests": 0
     },
     "BrowserConfiguration": {
       "Headless": true

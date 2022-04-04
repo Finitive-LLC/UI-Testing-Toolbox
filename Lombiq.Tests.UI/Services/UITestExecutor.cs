@@ -12,7 +12,7 @@ namespace Lombiq.Tests.UI.Services
 {
     public static class UITestExecutor
     {
-        private static readonly SemaphoreSlim _semaphoreSlim = new(14);
+        private static SemaphoreSlim _semaphoreSlim;
 
         /// <summary>
         /// Executes a test on a new Orchard Core web app instance within a newly created Atata scope.
@@ -54,13 +54,21 @@ namespace Lombiq.Tests.UI.Services
 
             configuration.TestOutputHelper.WriteLineTimestampedAndDebug("Finished preparation for {0}.", testManifest.Name);
 
+            if (_semaphoreSlim == null && configuration.MaxRunningConcurrentTests > 0)
+            {
+                _semaphoreSlim = new SemaphoreSlim(configuration.MaxRunningConcurrentTests);
+            }
+
             var retryCount = 0;
             var passed = false;
             while (!passed)
             {
                 try
                 {
-                    await _semaphoreSlim.WaitAsync();
+                    if (_semaphoreSlim != null)
+                    {
+                        await _semaphoreSlim.WaitAsync();
+                    }
 
                     await using var instance = new UITestExecutionSession(testManifest, configuration);
                     passed = await instance.ExecuteAsync(retryCount, dumpRootPath);
@@ -77,7 +85,10 @@ namespace Lombiq.Tests.UI.Services
                         TeamCityMetadataReporter.ReportInt(testManifest.Name, "TryCount", retryCount + 1);
                     }
 
-                    _semaphoreSlim.Release();
+                    if (_semaphoreSlim != null)
+                    {
+                        _semaphoreSlim?.Release();
+                    }
                 }
 
                 retryCount++;
