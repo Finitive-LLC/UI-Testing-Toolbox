@@ -29,8 +29,9 @@ namespace Lombiq.Tests.UI.Services
 
         public int MaxRunningConcurrentTests { get; set; } =
             TestConfigurationManager.GetIntConfiguration(
-                "OrchardCoreUITestExecutorConfiguration:MaxRunningConcurrentTests",
-                Environment.ProcessorCount);
+                $"{nameof(OrchardCoreUITestExecutorConfiguration)}:{nameof(MaxRunningConcurrentTests)}") is not { } intValue || intValue == 0
+                ? Environment.ProcessorCount
+                : intValue;
 
         public TimeSpan RetryInterval { get; set; } =
             TimeSpan.FromSeconds(TestConfigurationManager.GetIntConfiguration("OrchardCoreUITestExecutorConfiguration:RetryIntervalSeconds", 0));

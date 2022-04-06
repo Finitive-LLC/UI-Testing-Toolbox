@@ -12,6 +12,7 @@ namespace Lombiq.Tests.UI.Services
 {
     public static class UITestExecutor
     {
+        private static readonly object _initLock = new();
         private static SemaphoreSlim _semaphoreSlim;
 
         /// <summary>
@@ -56,7 +57,10 @@ namespace Lombiq.Tests.UI.Services
 
             if (_semaphoreSlim == null && configuration.MaxRunningConcurrentTests > 0)
             {
-                _semaphoreSlim = new SemaphoreSlim(configuration.MaxRunningConcurrentTests);
+                lock (_initLock)
+                {
+                    _semaphoreSlim ??= new SemaphoreSlim(configuration.MaxRunningConcurrentTests);
+                }
             }
 
             var retryCount = 0;
@@ -85,10 +89,7 @@ namespace Lombiq.Tests.UI.Services
                         TeamCityMetadataReporter.ReportInt(testManifest.Name, "TryCount", retryCount + 1);
                     }
 
-                    if (_semaphoreSlim != null)
-                    {
-                        _semaphoreSlim?.Release();
-                    }
+                    _semaphoreSlim?.Release();
                 }
 
                 retryCount++;
