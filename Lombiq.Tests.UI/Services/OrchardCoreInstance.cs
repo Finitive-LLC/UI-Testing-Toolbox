@@ -48,7 +48,7 @@ namespace Lombiq.Tests.UI.Services
     public sealed class OrchardCoreInstance : IWebApplicationInstance
     {
         // Using an HTTPS URL so it's the same as in the actual app.
-        private const string UrlPrefix = "https://localhost:";
+        private const string UrlPrefix = "http://localhost:";
 
         private static readonly PortLeaseManager _portLeaseManager;
         private static readonly ConcurrentDictionary<string, string> _exeCopyMarkers = new();
