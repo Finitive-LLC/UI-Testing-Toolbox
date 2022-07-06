@@ -71,21 +71,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lombiq.Tests.UI.Shortcuts\Lombiq.Tests.UI.Shortcuts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
     <ProjectReference Include="..\..\..\src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.RestEase\Lombiq.HelpfulLibraries.RestEase.csproj" />
     <ProjectReference Include="..\..\..\src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.csproj" />
   </ItemGroup>
 
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\src\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\src\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+  <!--<ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+    <ProjectReference Include="..\..\..\src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.RestEase\Lombiq.HelpfulLibraries.RestEase.csproj" />
+    <ProjectReference Include="..\..\..\src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.csproj" />
+  </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
     <PackageReference Include="Lombiq.HelpfulLibraries" Version="2.0.1" />
     <PackageReference Include="Lombiq.HelpfulLibraries.RestEase" Version="2.0.1" />
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.0" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <!-- These are necessary for symbols NuGet packaging, otherwise Shouldly would prevent PDBs to be packaged, see:
   https://github.com/NuGet/Home/discussions/11541. -->
